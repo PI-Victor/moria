@@ -1,0 +1,17 @@
+venv
+.venv
+activate
+ac
+*~
+*pyc
+*.idea
+*.egg-info
+*build
+*dist
+__pycache__/
+*.sublime-*
+*.pyo
+tmp/
+*out
+#*#
+*.db
