@@ -32,21 +32,26 @@ def gen_kpi():
         kpi_name = kpi_name + charlist[random.randrange(len(charlist))]
     return kpi_name
 
-def gen_value():
-    kpi_gender = kpi_types[random.randrange(1,4)]
-    if kpi_gender == 'string':
+def gen_value(valtype=0, update=False):
+    """If we are updating the hash, only generate new values,
+    nothing else
+    """
+    if not update:    
+        valtype = random.randrange(1,5)
+
+    if kpi_types[valtype] == 'string':
         service_stat = ['running','faulted', 'offline']
         value_type = service_stat[random.randrange(1,3)]
-    elif kpi_gender == 'int':
+    elif kpi_types[valtype] == 'int':
         value_type = random.randrange(0,100)
-    elif kpi_gender == 'boolean':
+    elif kpi_types[valtype]  == 'boolean':
         bool_stat = ['False','True']
         value_type = bool_stat[random.randrange(2)]
-    elif kpi_gender == 'float':
+    elif kpi_types[valtype] == 'float':
         value_type = random.randrange(1,100) / 2.5
     else:
         return 
-    return value_type, kpi_gender
+    return value_type, kpi_types[valtype]
 
 def gen_def():
     """generate a kpi definition """
