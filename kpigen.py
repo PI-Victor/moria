@@ -38,7 +38,7 @@ def gen_value():
         service_stat = ['running','faulted', 'offline']
         value_type = service_stat[random.randrange(1,3)]
     elif kpi_gender == 'int':
-        value_type = random.randrage(0,100)
+        value_type = random.randrange(0,100)
     elif kpi_gender == 'boolean':
         bool_stat = ['False','True']
         value_type = bool_stat[random.randrange(2)]
@@ -46,12 +46,12 @@ def gen_value():
         value_type = random.randrange(1,100) / 2.5
     else:
         return 
-    return value_type
+    return value_type, kpi_gender
 
 def gen_def():
     """generate a kpi definition """
-    kpi_gender = gen_value()   # yeah i know i ran out of names
-    print kpi_gender
+    value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
+    print kpi_gender, value_type
     pass
     for i in range(1,5):
         kpi_types
