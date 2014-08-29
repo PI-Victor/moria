@@ -1,4 +1,4 @@
-import time
+import datetime
 import random
 
 #Author: p-victor @ palade.ionut@gmail.com
@@ -55,14 +55,15 @@ def gen_value(valtype=0, update=False):
 
 def gen_def():
     """generate a kpi definition """
+    timenow = str(datetime.datetime.utcnow())
     for i in range(hashno):
         value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
         kpi_name = gen_name()
-        time_tag = inject_kpi(kpi_name, kpi_gender, value_type)
+        time_tag = inject_kpi(kpi_name, kpi_gender, value_type, timenow)
     print time_tag
 
-def inject_kpi(kpi_name, kpi_gender, value_type):
-        time_event.setdefault(kpi_name,value_type)
+def inject_kpi(kpi_name, kpi_gender, value_type, timenow):
+        time_event.setdefault(timenow, {}.setdefault(kpi_name,value_type))
         return time_event
 
 
