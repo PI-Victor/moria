@@ -12,10 +12,10 @@ it can simulate traffic KPIs in a telecom core network
 
 charlist = 'AbCDeFgHijklmnopQrStuVwxyZ231_654987-'
 multiplier = 10 # use the multiplier to increase/decrease the kpi value
-hashno = 10 # number of KPIs a time series event should have
+hashno = 50 # number of KPIs a time series event should have
 time_event = {} #the hash itself
 sleep_timer = 60 * 5  # generate every 60 * n
-kpi_len = 5
+
 
 kpi_types = {1: 'int',
             2: 'string',
@@ -23,12 +23,12 @@ kpi_types = {1: 'int',
             4: 'float'}
 
 
-def gen_kpi():
+def gen_name():
     """generate a random kpi name with the specified length
     add the random kpi to the hash
     """
     kpi_name = ''
-    for i in range(kpi_len):
+    for i in range(random.randrange(4,8)):
         kpi_name = kpi_name + charlist[random.randrange(len(charlist))]
     return kpi_name
 
@@ -55,12 +55,11 @@ def gen_value(valtype=0, update=False):
 
 def gen_def():
     """generate a kpi definition """
-    value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
-    print kpi_gender, value_type
-    pass
-    for i in range(1,5):
-        kpi_types
-    return 
+    for i in range(hashno):
+        value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
+        kpi_name = gen_name()
+        print kpi_name, kpi_gender, value_type
+    
 
 def inject_kpi():
     for i in range(hashno):
