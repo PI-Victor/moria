@@ -58,15 +58,13 @@ def gen_def():
     for i in range(hashno):
         value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
         kpi_name = gen_name()
-        print kpi_name, kpi_gender, value_type
-    
+        time_tag = inject_kpi(kpi_name, kpi_gender, value_type)
+    print time_tag
 
-def inject_kpi():
-    for i in range(hashno):
-        kpi_name = generate_kpis()
-        
-        time_event.setdefault(kpi_name, 1                         
-                       )
+def inject_kpi(kpi_name, kpi_gender, value_type):
+        time_event.setdefault(kpi_name,value_type)
+        return time_event
+
 
 def main():
     gen_def()
