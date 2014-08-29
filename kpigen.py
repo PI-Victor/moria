@@ -1,5 +1,6 @@
 import datetime
 import random
+import time
 
 #Author: p-victor @ palade.ionut@gmail.com
 #The codeflavour Org
@@ -12,9 +13,9 @@ it can simulate traffic KPIs in a telecom core network
 
 charlist = 'AbCDeFgHijklmnopQrStuVwxyZ231_654987-'
 multiplier = 10 # use the multiplier to increase/decrease the kpi value
-hashno = 50 # number of KPIs a time series event should have
+hashno = 10 # number of KPIs a time series event should have
 time_event = {} #the hash itself
-sleep_timer = 60 * 5  # generate every 60 * n
+sleep_timer = 1 * 5  # generate every 60 * n
 
 
 kpi_types = {1: 'int',
@@ -28,7 +29,7 @@ def gen_name():
     add the random kpi to the hash
     """
     kpi_name = ''
-    for i in range(random.randrange(4,8)):
+    for i in range(random.randrange(4,10)):
         kpi_name = kpi_name + charlist[random.randrange(len(charlist))]
     return kpi_name
 
@@ -56,19 +57,24 @@ def gen_value(valtype=0, update=False):
 def gen_def():
     """generate a kpi definition """
     timenow = str(datetime.datetime.utcnow())
+    time_tag = {}
+#    time_tag.setdefault('event',timenow)
     for i in range(hashno):
         value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
         kpi_name = gen_name()
         time_tag = inject_kpi(kpi_name, kpi_gender, value_type, timenow)
+
     print time_tag
 
 def inject_kpi(kpi_name, kpi_gender, value_type, timenow):
-        time_event.setdefault(timenow, {}.setdefault(kpi_name,value_type))
-        return time_event
+    time_event.setdefault(kpi_name, value_type)
+    return time_event
 
 
 def main():
-    gen_def()
+    while True:
+        gen_def()
+        time.sleep(sleep_timer)
 
 if __name__ == '__main__':
     main()
