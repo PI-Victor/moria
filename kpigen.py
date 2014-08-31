@@ -63,8 +63,7 @@ def gen_def():
         value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
         kpi_name = gen_name()
         time_tag = inject_kpi(kpi_name, kpi_gender, value_type, timenow)
-
-    print time_tag
+    return time_tag
 
 def inject_kpi(kpi_name, kpi_gender, value_type, timenow):
     time_event.setdefault(kpi_name, value_type)
