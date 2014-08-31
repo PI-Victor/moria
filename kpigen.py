@@ -58,11 +58,13 @@ def gen_def():
     """generate a kpi definition """
     timenow = str(datetime.datetime.utcnow())
     time_tag = {}
-#    time_tag.setdefault('event',timenow)
+    print time_tag
+    time_tag.setdefault('event',timenow)
     for i in range(hashno):
         value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
         kpi_name = gen_name()
         time_tag = inject_kpi(kpi_name, kpi_gender, value_type, timenow)
+    print time_tag
     return time_tag
 
 def inject_kpi(kpi_name, kpi_gender, value_type, timenow):
@@ -73,6 +75,7 @@ def inject_kpi(kpi_name, kpi_gender, value_type, timenow):
 def main():
     while True:
         gen_def()
+        print "Ok so now we are sleeping"
         time.sleep(sleep_timer)
 
 if __name__ == '__main__':
