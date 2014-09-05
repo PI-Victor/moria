@@ -7,33 +7,35 @@ avg = 1
 
 
 def create_timeseries(cpuint=1,percore=False ):
+#    O(2^n)
+
     time_series = {}
-    cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
-    
-    for metric in cpu_load._fields:
-        time_series.setdefault(metric,getattr(cpu_load, metric))
-    
+    for i in range(10):
+        cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
+        datapoints = []
+        for metric in cpu_load._fields:
+            datapoints.append(getattr(cpu_load, metric))
+            time_series.setdefault(metric, datapoints)
+
     return time_series
         
 
 def create_graph(kpi_list):
+    labels = []
     for label in kpi_list:
-        labels = 
+        labels.append(label)
 
     chart = pygal.Line()
-    chart.x_labels = [
-        'test1',
-        'test2',
-        'test3',
-    ]
-#    chart.add(kpi_list)
-#    chart.render()
+    chart.x_labels = labels
+
+    for line, serie in kpi_list.items():
+        chart.add(line,serie)
+    chart.render_to_file('chart.svg')
     
 
 def main():
-    while True:
-        kpis = create_timeseries(avg)
-        create_graph(kpis)
+    kpis = create_timeseries(avg)
+    create_graph(kpis)
 
 if __name__ == '__main__':
     main()
