@@ -1,6 +1,8 @@
 import datetime
 import random
 import time
+import psutil
+
 
 #Author: p-victor @ palade.ionut@gmail.com
 #The codeflavour Org
@@ -71,12 +73,17 @@ def inject_kpi(kpi_name, kpi_gender, value_type, timenow):
     time_event.setdefault(kpi_name, value_type)
     return time_event
 
+def get_pc_metrics():
+    cputime = psutil.cpu_times_percent(interval=1, percpu=False)
+    return cputime
 
 def main():
     while True:
-        gen_def()
-        print "Ok so now we are sleeping"
+#        gen_def()
+#        print "Ok so now we are sleeping"
+        print get_pc_metrics()
         time.sleep(sleep_timer)
+
 
 if __name__ == '__main__':
     main()
