@@ -14,12 +14,14 @@ def create_timeseries(cpuint=1,percore=False):
     for i in range(sample):
         datapoints = []
         cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
+        [time_series.setdefault(metric,[]) for metric in cpu_load._fields]
+#        for metric in cpu_load._fields:
+#            time_series.setdefault(metric,[])
+#        [v.append(getattr(cpu_load, k)) for k,v in time_series.item()]
+        [v.append(random.randrange(10)) for k,v in time_series.items()]
 
-        for metric in cpu_load._fields:
-            time_series.setdefault(metric,[])
-        
-        for k,v in time_series.items():
-            v = v.append(random.randrange(10))   # don't graph system load just generate randomly
+#        for k,v in time_series.items():
+#            v = v.append(random.randrange(10))   # don't graph system load just generate randomly
 #            v = v.append(getattr(cpu_load, k))
 
     return time_series
