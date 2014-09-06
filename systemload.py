@@ -16,7 +16,7 @@ def create_timeseries(cpuint=1,percore=False):
         datapoints = []
         cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
         [time_series.setdefault(metric,[]) for metric in cpu_load._fields]
-        [values.append(getattr(cpu_load, metric)) for metric,value in time_series.items()]
+        [values.append(getattr(cpu_load, metric)) for metric,values in time_series.items()]
 #        [v.append(random.randrange(10)) for k,v in time_series.items()]   # for random quick testing of a graph
     return time_series
 
@@ -32,9 +32,6 @@ def create_graph(kpi_list):
         chart.add(line,series)
 
     chart.render_to_file('chart.svg')
-
-def push_to_mongo(time_series):
-        
 
 def main():
     while True:
