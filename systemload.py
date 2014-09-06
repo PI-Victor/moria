@@ -15,14 +15,8 @@ def create_timeseries(cpuint=1,percore=False):
         datapoints = []
         cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
         [time_series.setdefault(metric,[]) for metric in cpu_load._fields]
-#        for metric in cpu_load._fields:
-#            time_series.setdefault(metric,[])
 #        [v.append(getattr(cpu_load, k)) for k,v in time_series.item()]
         [v.append(random.randrange(10)) for k,v in time_series.items()]
-
-#        for k,v in time_series.items():
-#            v = v.append(random.randrange(10))   # don't graph system load just generate randomly
-#            v = v.append(getattr(cpu_load, k))
 
     return time_series
 
@@ -31,7 +25,7 @@ def create_graph(kpi_list):
     for label in kpi_list:
         labels.append(label)
 
-    chart = pygal.Line()
+    chart = pygal.Bar()
     chart.x_labels = map(str, range(0,10))
 
     for line, series in kpi_list.items():
