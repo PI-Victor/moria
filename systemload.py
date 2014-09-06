@@ -2,23 +2,27 @@ import psutil
 import time 
 import datetime
 import pygal
+import random
 
 avg = 1
+sample = 10 
 
-
-def create_timeseries(cpuint=1,percore=False ):
+def create_timeseries(cpuint=1,percore=False):
 #    O(2^n)
-
     time_series = {}
-    for i in range(10):
-        cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
+
+    for i in range(sample):
         datapoints = []
+        cpu_load = psutil.cpu_times_percent(interval=cpuint, percpu=percore)
+
         for metric in cpu_load._fields:
-            datapoints.append(getattr(cpu_load, metric))
-            time_series.setdefault(metric, datapoints)
+            time_series.setdefault(metric,[])
+        
+        for k,v in time_series.items():
+            v = v.append(random.randrange(10))   # don't graph system load just generate randomly
+#            v = v.append(getattr(cpu_load, k))
 
     return time_series
-        
 
 def create_graph(kpi_list):
     labels = []
@@ -26,10 +30,11 @@ def create_graph(kpi_list):
         labels.append(label)
 
     chart = pygal.Line()
-    chart.x_labels = labels
+    chart.x_labels = map(str, range(0,10))
 
-    for line, serie in kpi_list.items():
-        chart.add(line,serie)
+    for line, series in kpi_list.items():
+        chart.add(line,series)
+
     chart.render_to_file('chart.svg')
     
 
