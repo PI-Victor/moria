@@ -18,6 +18,7 @@ def create_timeseries(cpuint=1,percore=False):
         [time_series.setdefault(metric,[]) for metric in cpu_load._fields]
         [v.append(getattr(cpu_load, k)) for k,v in time_series.items()]
 #        [v.append(random.randrange(10)) for k,v in time_series.items()]   # for random quick testing of a graph
+    print time_series
     return time_series
 
 def create_graph(kpi_list):
@@ -37,7 +38,7 @@ def create_graph(kpi_list):
 def main():
     while True:
         kpis = create_timeseries(avg)
-        create_graph(kpis)
+#        create_graph(kpis)
 
 if __name__ == '__main__':
     main()
