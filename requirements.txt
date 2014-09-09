@@ -1,5 +1,7 @@
+lockfile==0.9.1
 mongoengine==0.8.7
 psutil==2.1.1
 pygal==1.5.0
 pymongo==2.7.2
+python-daemon==1.6.1
 wsgiref==0.1.2
