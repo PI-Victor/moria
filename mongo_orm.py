@@ -8,7 +8,7 @@ except ConnectionError as e:
     exit('Connection to mongo refused')
 
 
-class Kpis(Document):
+class CpuLoad(Document):
     timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
     cpu_softirq = FloatField()
     cpu_iowait = FloatField()
@@ -21,3 +21,5 @@ class Kpis(Document):
     cpu_steal = FloatField()
     cpu_nice = FloatField()
     
+class VirtualMemory(Document):
+    timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
