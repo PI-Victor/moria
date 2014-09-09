@@ -23,3 +23,4 @@ class CpuLoad(Document):
     
 class VirtualMemory(Document):
     timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
+    vm_total = 

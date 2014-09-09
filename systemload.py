@@ -18,7 +18,6 @@ graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
                     filemode='a', level=logging.DEBUG)
 
-
 def create_timeseries(psfunct, *args):
     time_series = {}
     for point in range(sample):
@@ -26,6 +25,7 @@ def create_timeseries(psfunct, *args):
         kpi_tuple = psfunct(*args)
         [time_series.setdefault(metric,[]) for metric in kpi_tuple._fields]
         [values.append(getattr(kpi_tuple, metric)) for metric,values in time_series.items()]
+        time.sleep(1.5)
     return time_series
 
 def cpu_metrics():
@@ -48,11 +48,17 @@ def swapmem_metrics():
     metric_sample = create_timeseries(swapmem_funct)
     create_graph(metric_sample,'swap_mem.svg','Swap Memory')
 
+def netio_metrics():
+    logging.debug('Fetching NIC Usage metrics')
+    netusage_funct = psutil.net_io_counters
+    metric_sample = create_timeseries(netusage_funct)
+    create_graph(metric_sample, 'netio.svg','Network IO')
+
 def create_graph(kpi_list, chart_name='chart.svg', chart_title='default'):
     labels = []
     for label in kpi_list:
         labels.append(label)
-    chart = pygal.StackedLine(fill=True, width=1024, height=600, title=chart_title, 
+    chart = pygal.Line(fill=True, width=1024, height=600, title=chart_title, 
                       legend_at_bottom=True)
     chart.x_labels = map(str, range(0,10))
     for line, series in kpi_list.items():
@@ -65,6 +71,6 @@ def main():
         cpu_metrics()
         vmem_metrics()
         swapmem_metrics()
-        
+        netio_metrics()
 if __name__ == '__main__':
     main()
