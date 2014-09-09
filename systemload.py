@@ -29,6 +29,7 @@ def create_graph(kpi_list):
     chart.x_labels = map(str, range(0,10))
 
     for line, series in kpi_list.items():
+        print line, series
         chart.add(line,series)
 
     chart.render_to_file('chart.svg')
