@@ -11,9 +11,11 @@ import os
 avg = 1
 sample = 10 
 
-debug_log = os.path.join(os.path.sep, os.path.dirname(os.path.dirname(os.path.realpath(__file__))), 'debug.log')
+work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.realpath(__file__)))
+debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
+graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
-logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(messages)s',
+logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
                     filemode='a', level=logging.DEBUG)
 
 def create_timeseries(kpi_tuple):
@@ -25,6 +27,7 @@ def create_timeseries(kpi_tuple):
     return time_series
 
 def cpu_metrics():
+    logging.debug('Fetching Cpu Load')
     cpuload_tuple = psutil.cpu_times_percent(interval=avg, percpu=False)
     time_series = create_timeseries(cpuload_tuple)
     create_graph(time_series, 'cpu_load.svg', 'Cpu Load')
@@ -47,7 +50,7 @@ def create_graph(kpi_list, chart_name='chart.svg', chart_title='default'):
     chart.x_labels = map(str, range(0,10))
     for line, series in kpi_list.items():
         chart.add(line,series)
-    chart.render_to_file(chart_name)
+    chart.render_to_file(os.path.join(os.path.sep, graph_dir, chart_name))
 
 def main():
     while True:
