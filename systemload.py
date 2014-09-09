@@ -14,14 +14,14 @@ import sys
 
 
 if len(sys.argv) < 2:
-    sample = 10 #how many sample to currently grab for each graph
+    sample = 15 #how many sample to currently grab for each graph
     print 'You can send the number of samples, as a parameter, needed for the graphs, default is 10'
 else:
     try:
         sample = int(sys.argv[1])
     except ValueError:
         print "That's not an integer, reverting to default 10 samples"
-        sample = 10
+        sample = 15
 
 avg = 1 #time to sample cpu usage
 
