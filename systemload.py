@@ -27,33 +27,33 @@ def create_timeseries(kpi_tuple):
 def cpu_metrics():
     cpuload_tuple = psutil.cpu_times_percent(interval=avg, percpu=False)
     time_series = create_timeseries(cpuload_tuple)
-    print time_series
+    create_graph(time_series, 'cpu_load.svg', 'Cpu Load')
 
 def vmem_metrics():
     vmem_tuple = psutil.virtual_memory()
     time_series = create_timeseries(vmem_tuple)
-    print time_series
+    create_graph(time_series, 'vmem.svg', 'Virtual Memory')
 
 def swapmem_metrics():
     swapmem_tuple = psutil.swap_memory()
     time_series = create_timeseries(swapmem_tuple)
-    print time_series
+    create_graph(time_series,'swap_mem.svg','Swap Memory')
 
-def create_graph(kpi_list, chart_name='chart.svg'):
+def create_graph(kpi_list, chart_name='chart.svg', chart_title='default'):
     labels = []
     for label in kpi_list:
         labels.append(label)
-    chart = pygal.Line(fill=True,width=1024, height=600, style=NeonStyle)
+    chart = pygal.Pie(fill=True,width=1024, height=600, title=chart_title)
     chart.x_labels = map(str, range(0,10))
     for line, series in kpi_list.items():
-        print line, series
         chart.add(line,series)
     chart.render_to_file(chart_name)
 
 def main():
-    cpu_metrics()
-    vmem_metrics()
-    swapmem_metrics()
+    while True:
+        cpu_metrics()
+        vmem_metrics()
+        swapmem_metrics()
 
 if __name__ == '__main__':
     main()
