@@ -7,9 +7,23 @@ from pygal.style import NeonStyle
 import daemon
 import logging
 import os
+import sys
+#TODO : Must implement multiproc and a daemon for precise computation of system usage
+#execution is sequential at this point, and the sample parameter delays data for the
+#next time series
 
-avg = 1
-sample = 10 
+
+if len(sys.argv) < 2:
+    sample = 10 #how many sample to currently grab for each graph
+    print 'You can send the number of samples, as a parameter, needed for the graphs, default is 10'
+else:
+    try:
+        sample = int(sys.argv[1])
+    except ValueError:
+        print "That's not an integer, reverting to default 10 samples"
+        sample = 10
+
+avg = 1 #time to sample cpu usage
 
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.realpath(__file__)))
 debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
@@ -54,13 +68,19 @@ def netio_metrics():
     metric_sample = create_timeseries(netusage_funct)
     create_graph(metric_sample, 'netio.svg','Network IO')
 
+def diskio_metrics():
+    logging.debug('Fetching disk io')
+    diskusage_funct = psutil.disk_io_counters
+    metric_sample = create_timeseries(diskusage_funct)
+    create_graph(metric_sample, 'diskio.svg', 'Disk IO counters')
+
 def create_graph(kpi_list, chart_name='chart.svg', chart_title='default'):
     labels = []
     for label in kpi_list:
         labels.append(label)
-    chart = pygal.Line(fill=True, width=1024, height=600, title=chart_title, 
+    chart = pygal.Line(fill=True, width=1440, height=500, title=chart_title, 
                       legend_at_bottom=True)
-    chart.x_labels = map(str, range(0,10))
+    chart.x_labels = map(str, range(0,sample))
     for line, series in kpi_list.items():
         chart.add(line,series)
     chart.render_to_file(os.path.join(os.path.sep, graph_dir, chart_name))
@@ -72,5 +92,7 @@ def main():
         vmem_metrics()
         swapmem_metrics()
         netio_metrics()
+        diskio_metrics()
+
 if __name__ == '__main__':
     main()
