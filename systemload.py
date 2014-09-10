@@ -24,23 +24,22 @@ else:
         print "That's not an integer, reverting to default 15 samples"
         sample = 15
 
-logger = logging.getLogger("DaemonLog")
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-handler = logging.FileHandler('debug.log')
-logger.addHandler(handler)
-
-
 avg = 1 #time to sample cpu usage
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.realpath(__file__)))
 debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
 graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
-#logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
-#                    filemode='a', level=logging.DEBUG)
+#logger = logging.getLogger("DaemonLog")
+#logger.setLevel(logging.DEBUG)
+#formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+#handler = logging.FileHandler(debug_log)
+#logger.addHandler(handler)
+
+logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
+                    filemode='a', level=logging.DEBUG)
 
 def cpu_metrics():
-    logger.debug('Fetching Cpu Load metrics')
+    logging.debug('Fetching Cpu Load metrics')
     cpuload_funct = psutil.cpu_times_percent 
     interval=avg 
     percpu=False
@@ -48,25 +47,25 @@ def cpu_metrics():
     create_graph(metric_sample, 'cpu_load.svg', 'Cpu Load')
 
 def vmem_metrics():
-    logger.debug('Fetching Virtual Memory metrics')
+    logging.debug('Fetching Virtual Memory metrics')
     vmem_funct = psutil.virtual_memory
     metric_sample = create_timeseries(vmem_funct)
     create_graph(metric_sample, 'vmem.svg', 'Virtual Memory')
 
 def swapmem_metrics():
-    logger.debug('Fetching Swap Memory metrics')
+    logging.debug('Fetching Swap Memory metrics')
     swapmem_funct = psutil.swap_memory
     metric_sample = create_timeseries(swapmem_funct)
     create_graph(metric_sample,'swap_mem.svg','Swap Memory')
 
 def netio_metrics():
-    logger.debug('Fetching NIC Usage metrics')
+    logging.debug('Fetching NIC Usage metrics')
     netusage_funct = psutil.net_io_counters
     metric_sample = create_timeseries(netusage_funct)
     create_graph(metric_sample, 'netio.svg','Network IO')
 
 def diskio_metrics():
-    logger.debug('Fetching disk io')
+    logging.debug('Fetching disk io')
     diskusage_funct = psutil.disk_io_counters
     metric_sample = create_timeseries(diskusage_funct)
     create_graph(metric_sample, 'diskio.svg', 'Disk IO counters')
@@ -93,13 +92,14 @@ def create_graph(kpi_list, chart_name='chart.svg', chart_title='default'):
     chart.render_to_file(os.path.join(os.path.sep, graph_dir, chart_name))
 
 def main():
-    daemon_context = daemon.DaemonContext(files_preserve = [handler.stream])
-    with daemon_context:
-        cpu_metrics()
-        vmem_metrics()
-        swapmem_metrics()
-        netio_metrics()
-        diskio_metrics()
+    daemon_context = daemon.DaemonContext(files_preserve = [logging.FileHandler(debug_log)])
+    #with daemon_context:
+    while True:
+            cpu_metrics()
+            vmem_metrics()
+            swapmem_metrics()
+            netio_metrics()
+            diskio_metrics()
 
 if __name__ == '__main__':
     main()
