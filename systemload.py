@@ -1,8 +1,5 @@
 import os
 import sys
-import random
-import time 
-import datetime
 
 from collection.classfactory import CpuMetrics, VmMetrics, NetIoMetrics, DiskIoMetrics, SwapMetrics
 
@@ -28,12 +25,6 @@ avg = 1 #time to sample cpu usage
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.realpath(__file__)))
 debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
 graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
-
-#logger = logging.getLogger("DaemonLog")
-#logger.setLevel(logging.DEBUG)
-#formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-#handler = logging.FileHandler(debug_log)
-#logger.addHandler(handler)
 
 logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
                     filemode='a', level=logging.DEBUG)

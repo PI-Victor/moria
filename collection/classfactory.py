@@ -2,7 +2,6 @@ import psutil
 import pygal
 import time
 import os
-import datetime
 
 from pygal.style import NeonStyle
 
