@@ -2,7 +2,7 @@ import psutil
 import time 
 import datetime
 import pygal
-import random
+OBimport random
 from pygal.style import NeonStyle
 import daemon
 import logging
@@ -37,6 +37,45 @@ graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
 logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
                     filemode='a', level=logging.DEBUG)
+
+class BaseClass(object):
+    def __init__(self, template='', tag='', message='', *args):
+        self.tag = tag
+        self.template = template
+        self.message = message
+        self.graph_fill = True
+        self.graph_width = 1440
+        self.graph_height = 500
+        self.legend = True
+    
+    def create_timeseries(self, psfunct, *args):
+        time_series = {}
+        for point in range(sample):
+            datapoints = []
+            kpi_tuple = psfunct(*args)
+            [time_series.setdefault(metric,[]) for metric in kpi_tuple._fields]
+            [values.append(getattr(kpi_tuple, metric)) for metric,values in time_series.items()]
+            time.sleep(1.5)
+        return time_series
+
+    def create_graph(self, kpi_list):
+        labels = []
+        for label in kpi_list:
+            labels.append(label)
+            chart = pygal.Line(fill=True, width=self.width, height=self.width, title=self.template, 
+                               legend_at_bottom=self.legend)
+            chart.x_labels = map(str, range(0,sample))
+            for line, series in kpi_list.items():
+                chart.add(line,series)
+                chart.render_to_file(os.path.join(os.path.sep, graph_dir, chart_name))
+
+        
+class CpuMetrics(BaseClass):
+    def do_graph(self):
+        self.create_timeseries()
+        
+        
+
 
 def cpu_metrics():
     logging.debug('Fetching Cpu Load metrics')
