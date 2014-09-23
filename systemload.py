@@ -1,13 +1,13 @@
-import psutil
+import os
+import sys
+import random
 import time 
 import datetime
 import pygal
-OBimport random
 from pygal.style import NeonStyle
+import psutil
 import daemon
 import logging
-import os
-import sys
 
 '''TODO : Must implement multiproc and a daemon for precise computation of system usage
 execution is sequential at this point, and the sample parameter delays data for the
