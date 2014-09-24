@@ -24,7 +24,6 @@ else:
 avg = 1 #time to sample cpu usage
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.realpath(__file__)))
 debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
-graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
 logging.basicConfig(filename=debug_log, format='%(asctime)s %(levelname)s:%(message)s',
                     filemode='a', level=logging.DEBUG)

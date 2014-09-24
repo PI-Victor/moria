@@ -1,12 +1,10 @@
-import psutil
-import pygal
 import time
 import os
-
+import psutil
+import pygal
 from pygal.style import NeonStyle
 
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
 graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
 class BaseClass(object):
@@ -47,7 +45,7 @@ class CpuMetrics(BaseClass):
         self.sample = sample
         self.interval = interval
         self.percpu = False
-        BaseClass.__init__(self)
+        super(CpuMetrics, self).__init__()
 
     def create_timeseries(self):
         BaseClass.create_timeseries(self, self.interval, self.percpu)
@@ -61,7 +59,7 @@ class VmMetrics(BaseClass):
         self.sample = sample
         self.interval = interval
         self.psfunct = psutil.virtual_memory
-        BaseClass.__init__(self)
+        super(VmMetrics, self).__init__()
 
         
 class SwapMetrics(BaseClass):
@@ -72,7 +70,7 @@ class SwapMetrics(BaseClass):
         self.sample = sample
         self.interval = interval
         self.psfunct = psutil.swap_memory
-        BaseClass.__init__(self)
+        super(SwapMetrics, self).__init__()
 
 
 class NetIoMetrics(BaseClass):
@@ -83,8 +81,7 @@ class NetIoMetrics(BaseClass):
         self.sample = sample
         self.interval = interval
         self.psfunct = psutil.net_io_counters
-        BaseClass.__init__(self)
-
+        super(NetIoMetrics, self).__init__()
 
 class DiskIoMetrics(BaseClass):
     def __init__(self, template='diskio.svg', graph_tag='Diso IO Metrics', sample=5, interval=5):
@@ -94,4 +91,4 @@ class DiskIoMetrics(BaseClass):
         self.sample = sample
         self.interval = interval
         self.psfunct = psutil.disk_io_counters
-        BaseClass.__init__(self)
+        super(DiskIoMetrics, self).__init__()
