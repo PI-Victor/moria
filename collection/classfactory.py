@@ -7,20 +7,21 @@ from pygal.style import NeonStyle
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
+
 class BaseClass(object):
-    def __init__(self, *args):
+    def __init__(self):
         self.graph_fill = True
         self.graph_width = 1440
         self.graph_height = 500
         self.legend = True
     
-    def create_timeseries(self,*args):
+    def create_timeseries(self, *args):
         time_series = {}
         for point in range(self.sample):
             datapoints = []
             kpi_tuple = self.psfunct(*args)
             [time_series.setdefault(metric,[]) for metric in kpi_tuple._fields]
-            [values.append(getattr(kpi_tuple, metric)) for metric,values in time_series.items()]
+            [values.append(getattr(kpi_tuple, metric)) for metric, values in time_series.items()]
             time.sleep(self.interval)
         self.create_graph(time_series)
 
@@ -48,11 +49,11 @@ class CpuMetrics(BaseClass):
         super(CpuMetrics, self).__init__()
 
     def create_timeseries(self):
-        BaseClass.create_timeseries(self, self.interval, self.percpu)
+        super(CpuMetrics, self).create_timeseries(self.interval, self.percpu)
 
     
 class VmMetrics(BaseClass):
-    def __init__(self, template='vmem.svg', graph_tag='Virtual Memory', sample=5, interval=1):
+    def __init__(self, template='vmem.svg', graph_tag='Virtual Memory', sample=5, interval=5):
         self.message = 'Fetching Virtual Memory Metrics'
         self.template = template
         self.graph_tag = graph_tag
