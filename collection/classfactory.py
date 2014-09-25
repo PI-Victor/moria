@@ -10,6 +10,7 @@ from mongo_odm import CpuLoadDoc, VMemDoc, VSwapDoc, NetIoDoc, DiskIoDoc
 work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
+
 class BaseClass(object):
     def __init__(self):
         self.graph_fill = True
@@ -23,20 +24,28 @@ class BaseClass(object):
             datapoints = []
             kpi_tuple = self.psfunct(**kwargs)
             [time_series.setdefault(metric,[]) for metric in kpi_tuple._fields]
-            [values.append(getattr(kpi_tuple, metric)) for metric,values in time_series.items()]
+            [values.append(getattr(kpi_tuple, metric)) for metric, values in time_series.items()]
             time.sleep(self.interval)
-        self.push_to_mongodb()
+#        print time_series, self.document
+        self.push_to_mongodb(time_series)
         self.create_graph(time_series)
         
-    def push_to_mongodb(self):
+    def push_to_mongodb(self, time_series):
         #leave this simple for now, try to access the db for the object, otherwise, return
-        hascon = 0
         try:
             connect('kpidb')
-            print "we got here"
         except connection.ConnectionError as e:
             print 'Conneciton to the db refused, running "on-the-fly mode", no history available'
             return 
+
+        fields = [field for field in self.document._fields if (field != "id" and field != "timestamp")]
+        for dbfield in self.document._meta_map:
+            for datapoint in time_series:
+                commit_fields =  '{}{}'.format(mapped, datapoint)
+                print commit_fields
+
+#        pushdocument = 
+#        self.document.save(self.document(fields))
             
     def create_graph(self, kpi_list):
         labels = []
@@ -46,7 +55,7 @@ class BaseClass(object):
                                legend_at_bottom=self.legend)
             chart.x_labels = map(str, range(0,self.sample))
             for line, series in kpi_list.items():
-                print line, series # print the kpis to a file
+#                print line, series # print the kpis to a file
                 chart.add(line,series)
             chart.render_to_file(os.path.join(os.path.sep, graph_dir, self.template))
     
@@ -68,7 +77,7 @@ class CpuMetrics(BaseClass):
 
     
 class VmMetrics(BaseClass):
-    def __init__(self, template='vmem.svg', graph_tag='Virtual Memory', sample=5, interval=1):
+    def __init__(self, template='vmem.svg', graph_tag='Virtual Memory', sample=5, interval=5):
         self.message = 'Fetching Virtual Memory Metrics'
         self.template = template
         self.graph_tag = graph_tag
@@ -101,6 +110,7 @@ class NetIoMetrics(BaseClass):
         self.psfunct = psutil.net_io_counters
         self.document = NetIoDoc
         super(NetIoMetrics, self).__init__()
+
 
 class DiskIoMetrics(BaseClass):
     def __init__(self, template='diskio.svg', graph_tag='Diso IO Metrics', sample=5, interval=5):

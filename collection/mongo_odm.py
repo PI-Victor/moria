@@ -7,14 +7,25 @@ class CpuLoadDoc(Document):
     cpu_softirq = FloatField()
     cpu_iowait = FloatField()
     cpu_sys = FloatField()
-    cpu_gues = FloatField()
+    cpu_guest = FloatField()
     cpu_idle = FloatField()
     cpu_user = FloatField()
     cpu_guestnice = FloatField()
     cpu_irq = FloatField()
     cpu_steal = FloatField()
     cpu_nice = FloatField()
-
+    
+    _meta_map = {'softirq' : 'cpu_softirq',
+                 'iowait': 'cpu_iowait',
+                 'system': 'cpu_sys',
+                 'guest': 'cpu_guest',
+                 'idle': 'cpu_idle',
+                 'user': 'cpu_user',
+                 'guest_nice': 'cpu_guestnice',
+                 'irq': 'cpu_irq',
+                 'steal': 'cpu_steal',
+                 'nice': 'cpu_nice'
+    }
 
 class VMemDoc(Document):
     timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
