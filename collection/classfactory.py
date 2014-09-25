@@ -26,7 +26,6 @@ class BaseClass(object):
             [time_series.setdefault(metric,[]) for metric in kpi_tuple._fields]
             [values.append(getattr(kpi_tuple, metric)) for metric, values in time_series.items()]
             time.sleep(self.interval)
-#        print time_series, self.document
         self.push_to_mongodb(time_series)
         self.create_graph(time_series)
         
@@ -38,14 +37,14 @@ class BaseClass(object):
             print 'Conneciton to the db refused, running "on-the-fly mode", no history available'
             return 
 
-        fields = [field for field in self.document._fields if (field != "id" and field != "timestamp")]
-        for dbfield in self.document._meta_map:
+        commit_fields = ''
+        for dbfield, mapped in self.document._meta_map.items():
             for datapoint in time_series:
-                commit_fields =  '{}{}'.format(mapped, datapoint)
-                print commit_fields
-
-#        pushdocument = 
-#        self.document.save(self.document(fields))
+                if datapoint == dbfield:
+                    print time_series[datapoint]
+                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
+        
+        self.document.save(pushdocument)
             
     def create_graph(self, kpi_list):
         labels = []
@@ -53,9 +52,8 @@ class BaseClass(object):
             labels.append(label)
             chart = pygal.Line(fill=True, width=self.graph_width, height=self.graph_height, title=self.graph_tag, 
                                legend_at_bottom=self.legend)
-            chart.x_labels = map(str, range(0,self.sample))
+            chart.x_labels = map(str, range(0, self.sample))
             for line, series in kpi_list.items():
-#                print line, series # print the kpis to a file
                 chart.add(line,series)
             chart.render_to_file(os.path.join(os.path.sep, graph_dir, self.template))
     

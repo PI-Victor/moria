@@ -4,16 +4,16 @@ import datetime
 
 class CpuLoadDoc(Document):
     timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
-    cpu_softirq = FloatField()
-    cpu_iowait = FloatField()
-    cpu_sys = FloatField()
-    cpu_guest = FloatField()
-    cpu_idle = FloatField()
-    cpu_user = FloatField()
-    cpu_guestnice = FloatField()
-    cpu_irq = FloatField()
-    cpu_steal = FloatField()
-    cpu_nice = FloatField()
+    cpu_softirq = ListField()
+    cpu_iowait = ListField()
+    cpu_sys = ListField()
+    cpu_guest = ListField()
+    cpu_idle = ListField()
+    cpu_user = ListField()
+    cpu_guestnice = ListField()
+    cpu_irq = ListField()
+    cpu_steal = ListField()
+    cpu_nice = ListField()
     
     _meta_map = {'softirq' : 'cpu_softirq',
                  'iowait': 'cpu_iowait',
@@ -27,17 +27,20 @@ class CpuLoadDoc(Document):
                  'nice': 'cpu_nice'
     }
 
+
 class VMemDoc(Document):
     timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
-    vm_total = IntField()
-    vm_used = IntField()
-    vm_cached = IntField()
-    vm_percent = FloatField()
-    vm_free = IntField()
-    vm_inactive = IntField()
-    vm_active = IntField()
-    vm_available = IntField()
-    vm_buffers = IntField()
+    vm_total = ListField()
+    vm_used = ListField()
+    vm_cached = ListField()
+    vm_percent = ListField()
+    vm_free = ListField()
+    vm_inactive = ListField()
+    vm_active = ListField()
+    vm_available = ListField()
+    vm_buffers = ListField()
+    
+    _meta_map = {''}
 
 
 class VSwapDoc(Document):
