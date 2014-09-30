@@ -67,9 +67,9 @@ class NetIoDoc(Document):
 
 class DiskIoDoc(Document):
     timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
-    disk_writebyt = ListField()
+    disk_writebyte = ListField()
     disk_readcount = ListField()
     disk_writecount = ListField()
     disk_readtime = ListField()
-    disk_readbyt = ListField()
+    disk_readbyte = ListField()
     disk_writetime = ListField()
