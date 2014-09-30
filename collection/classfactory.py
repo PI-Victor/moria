@@ -34,15 +34,15 @@ class BaseClass(object):
         try:
             connect('kpidb')
         except connection.ConnectionError as e:
-            print 'Conneciton to the db refused, running "on-the-fly mode", no history available'
+            print 'Connection to the db refused, running "on-the-fly mode", no history available'
             return 
 
-        commit_fields = ''
-        for dbfield, mapped in self.document._meta_map.items():
-            for datapoint in time_series:
-                if datapoint == dbfield:
-                    print time_series[datapoint]
-                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
+#        commit_fields = ''
+#        for dbfield, mapped in self.document._meta_map.items():
+#            for datapoint in time_series:
+#                if datapoint == dbfield:
+#                    print time_series[datapoint]
+#                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
         
         self.document.save(pushdocument)
             
@@ -72,7 +72,7 @@ class CpuMetrics(BaseClass):
 
     def create_timeseries(self):
         super(CpuMetrics, self).create_timeseries(interval=self.interval, percpu=self.percpu)
-
+    def push
     
 class VmMetrics(BaseClass):
     def __init__(self, template='vmem.svg', graph_tag='Virtual Memory', sample=5, interval=5):
