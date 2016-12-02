@@ -3,7 +3,10 @@ import datetime
 
 
 class CpuLoadDoc(Document):
-    timestamp = DateTimeField(required=True, default=datetime.datetime.utcnow())
+    timestamp = DateTimeField(
+        required=True,
+        default=datetime.datetime.utcnow()
+    )
     cpu_softirq = ListField()
     cpu_iowait = ListField()
     cpu_sys = ListField()
@@ -40,8 +43,6 @@ class VMemDoc(Document):
     vm_active = ListField()
     vm_available = ListField()
     vm_buffers = ListField()
-
-    _meta_map = {''}
 
 
 class VSwapDoc(Document):

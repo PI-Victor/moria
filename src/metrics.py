@@ -6,9 +6,7 @@ from pygal.style import NeonStyle
 from mongoengine import connection, connect
 from mongo_odm import CpuLoadDoc, VMemDoc, VSwapDoc, NetIoDoc, DiskIoDoc
 
-
-work_dir = os.path.join(os.path.sep, os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
-graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
+from config import log, workdir, graphdir
 
 
 class BaseClass(object):
@@ -30,23 +28,22 @@ class BaseClass(object):
         self.create_graph(self.time_series)
 
     def push_to_mongodb(self):
-        # leave this simple for now, try to access the db for the object, otherwise, return
         try:
             connect('kpidb')
-            log.Info("Connection accepted, pushing to mongo database: 'kpidb' ")
-            log.Info(self.message)
+            log.info("Connection accepted, pushing to mongo database: 'kpidb' ")
+            log.info(self.message)
         except connection.ConnectionError as e:
-            log.Info('Connection to the db refused, running "on-the-fly mode", no history available')
+            log.info('Connection to the db refused, running "on-the-fly mode", no history available')
             return
 
-#        commit_fields = ''
-#        for dbfield, mapped in self.document._meta_map.items():
-#            for datapoint in time_series:
-#                if datapoint == dbfield:
-#                    print time_series[datapoint]
-#                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
+        commit_fields = ''
+        for dbfield, mapped in self.document._meta_map.items():
+            for datapoint in time_series:
+                if datapoint == dbfield:
+                    log.info(time_series[datapoint])
+                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
 
-#        self.document.save(pushdocument)
+        self.document.save(pushdocument)
 
     def create_graph(self, kpi_list):
         labels = []
