@@ -97,8 +97,6 @@ class CpuMetrics(BaseClass):
 
     def push_to_mongodb(self):
         super(CpuMetrics, self).push_to_mongodb()
-        #this triggers my OCD, but i can't find a better solution for inserting values in the db
-        #at this point, will leave it as it is, until i figure it out. boooo!
         cpuloaddoc = self.document(
             cpu_softirq = self.time_series['softirq'],
             cpu_iowait = self.time_series['iowait'],
