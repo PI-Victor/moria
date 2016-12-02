@@ -3,16 +3,6 @@ import random
 import time
 import psutil
 
-
-#Author: p-victor @ palade.ionut@gmail.com
-#The codeflavour Org
-
-"""Generate random KPIs with randon values,
-must have a way to tweak the value to high or low for
-better simulation and it should be time dependent so
-it can simulate traffic KPIs in a telecom core network
-"""
-
 charlist = 'AbCDeFgHijklmnopQrStuVwxyZ231_654987-'
 multiplier = 10 # use the multiplier to increase/decrease the kpi value
 hashno = 10 # number of KPIs a time series event should have
@@ -20,14 +10,15 @@ time_event = {} #the hash itself
 sleep_timer = 1 * 5  # generate every 60 * n
 
 
-kpi_types = {1: 'int',
-            2: 'string',
-            3: 'boolean',
-            4: 'float'}
-
+kpi_types = {
+    1: 'int',
+    2: 'string',
+    3: 'boolean',
+    4: 'float'
+}
 
 def gen_name():
-    """generate a random kpi name with the specified length
+    """ Generate a random kpi name with the specified length
     add the random kpi to the hash
     """
     kpi_name = ''
@@ -36,10 +27,10 @@ def gen_name():
     return kpi_name
 
 def gen_value(valtype=0, update=False):
-    """If we are updating the hash, only generate new values,
+    """ If we are updating the hash, only generate new values,
     nothing else
     """
-    if not update:    
+    if not update:
         valtype = random.randrange(1,5)
 
     if kpi_types[valtype] == 'string':
@@ -53,17 +44,17 @@ def gen_value(valtype=0, update=False):
     elif kpi_types[valtype] == 'float':
         value_type = random.randrange(1,100) / 2.5
     else:
-        return 
+        return
     return value_type, kpi_types[valtype]
 
 def gen_def():
-    """generate a kpi definition """
+    """ Generate a kpi definition """
     timenow = str(datetime.datetime.utcnow())
     time_tag = {}
     print time_tag
     time_tag.setdefault('event',timenow)
     for i in range(hashno):
-        value_type, kpi_gender = gen_value()   # yeah i know i ran out of names
+        value_type, kpi_gender = gen_value()
         kpi_name = gen_name()
         time_tag = inject_kpi(kpi_name, kpi_gender, value_type, timenow)
     print time_tag
@@ -79,11 +70,9 @@ def get_pc_metrics():
 
 def main():
     while True:
-#        gen_def()
-#        print "Ok so now we are sleeping"
+        gen_def()
         print get_pc_metrics()
         time.sleep(sleep_timer)
-
 
 if __name__ == '__main__':
     main()
