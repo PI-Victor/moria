@@ -1,4 +1,4 @@
-from mongoengine import *  
+from mongoengine import *
 import datetime
 
 
@@ -14,17 +14,18 @@ class CpuLoadDoc(Document):
     cpu_irq = ListField()
     cpu_steal = ListField()
     cpu_nice = ListField()
-    
-    _meta_map = {'softirq' : 'cpu_softirq',
-                 'iowait': 'cpu_iowait',
-                 'system': 'cpu_sys',
-                 'guest': 'cpu_guest',
-                 'idle': 'cpu_idle',
-                 'user': 'cpu_user',
-                 'guest_nice': 'cpu_guestnice',
-                 'irq': 'cpu_irq',
-                 'steal': 'cpu_steal',
-                 'nice': 'cpu_nice'
+
+    _meta_map = {
+        'softirq' : 'cpu_softirq',
+        'iowait': 'cpu_iowait',
+        'system': 'cpu_sys',
+        'guest': 'cpu_guest',
+        'idle': 'cpu_idle',
+        'user': 'cpu_user',
+        'guest_nice': 'cpu_guestnice',
+        'irq': 'cpu_irq',
+        'steal': 'cpu_steal',
+        'nice': 'cpu_nice'
     }
 
 
@@ -39,7 +40,7 @@ class VMemDoc(Document):
     vm_active = ListField()
     vm_available = ListField()
     vm_buffers = ListField()
-    
+
     _meta_map = {''}
 
 

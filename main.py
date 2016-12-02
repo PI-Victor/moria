@@ -16,13 +16,19 @@ work_dir = os.path.join(
     os.path.sep,
     os.path.dirname(os.path.realpath(__file__))
 )
-debug_log = os.path.join(os.path.sep, work_dir, 'debug.log')
+log_file = os.path.join(
+            os.path.sep,
+            work_dir,
+            'debug.log'
+)
 logging.basicConfig(
-    filename=debug_log,
+    filename=log_file,
     format='%(asctime)s %(levelname)s:%(message)s',
-    filemode='a', level=logging.DEBUG
+    filemode='a',
+    level=logging.DEBUG,
 )
 
+logger = logging.getLogger(__name__)
 
 def load_functions():
     CpuMetrics().create_timeseries()
@@ -32,21 +38,14 @@ def load_functions():
     DiskIoMetrics().create_timeseries()
 
 def main():
-    daemon_context = daemon.DaemonContext(
-        files_preserve = [logging.FileHandler(debug_log)]
+
+    ctx = daemon.DaemonContext(
+        working_directory = work_dir,
+        files_preserve = [log_handler],
+        umask = 0o002,
     )
-    with daemon_context:
+    with ctx:
         load_functions()
 
-
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        sample = 15 #how many sample to currently grab for each graph
-        print 'You can send the number of samples, as a parameter, needed for the graphs, default is 15'
-    else:
-        try:
-            sample = int(sys.argv[1])
-        except ValueError:
-            print "That's not an integer, reverting to default 15 samples"
-            sample = 15
     main()

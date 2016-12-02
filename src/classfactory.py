@@ -12,14 +12,14 @@ graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
 
 class BaseClass(object):
-    
+
     def __init__(self, x, y):
         self.graph_fill = True
         self.graph_width = x
         self.graph_height = y
         self.legend = True
 
-        
+
     def create_timeseries(self, **kwargs):
         self.time_series = {}
         for point in range(self.sample):
@@ -31,25 +31,25 @@ class BaseClass(object):
         self.push_to_mongodb()
         self.create_graph(self.time_series)
 
-        
+
     def push_to_mongodb(self):
         # leave this simple for now, try to access the db for the object, otherwise, return
         try:
             connect('kpidb')
-            print("Connection accepted, pushing to mongo database: 'kpidb' ")
-            print(self.message)
+            log.Info("Connection accepted, pushing to mongo database: 'kpidb' ")
+            log.Info(self.message)
         except connection.ConnectionError as e:
-            print('Connection to the db refused, running "on-the-fly mode", no history available')
-            return 
+            log.Info('Connection to the db refused, running "on-the-fly mode", no history available')
+            return
 
-        
+
 #        commit_fields = ''
 #        for dbfield, mapped in self.document._meta_map.items():
 #            for datapoint in time_series:
 #                if datapoint == dbfield:
 #                    print time_series[datapoint]
 #                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
-        
+
 #        self.document.save(pushdocument)
 
 
@@ -57,17 +57,34 @@ class BaseClass(object):
         labels = []
         for label in kpi_list:
             labels.append(label)
-            chart = pygal.Line(fill=True, width=self.graph_width, height=self.graph_height, title=self.graph_tag, 
-                               legend_at_bottom=self.legend)
+            chart = pygal.Line(
+                fill=True,
+                width=self.graph_width,
+                height=self.graph_height,
+                title=self.graph_tag,
+                legend_at_bottom=self.legend
+            )
             chart.x_labels = map(str, range(0, self.sample))
             for line, series in kpi_list.items():
                 chart.add(line,series)
-            chart.render_to_file(os.path.join(os.path.sep, graph_dir, self.template))
-    
+
+            chart.render_to_file(
+                os.path.join(
+                    os.path.sep,
+                    graph_dir,
+                    self.template,
+                )
+            )
+
 
 class CpuMetrics(BaseClass):
-    
-    def __init__(self, template='cpu_load.svg', graph_tag='Cpu Load Total', sample=5, interval=1):
+
+    def __init__(
+        self,
+        template='cpu_load.svg',
+        graph_tag='Cpu Load Total',
+        sample=5, interval=1
+    ):
         self.message = 'Cpu Processing started'
         self.template = template
         self.graph_tag = graph_tag
@@ -78,11 +95,14 @@ class CpuMetrics(BaseClass):
         self.document = CpuLoadDoc
         super(CpuMetrics, self).__init__()
 
-        
-    def create_timeseries(self):
-        super(CpuMetrics, self).create_timeseries(interval=self.interval, percpu=self.percpu)
 
-        
+    def create_timeseries(self):
+        super(CpuMetrics, self).create_timeseries(
+            interval=self.interval,
+            percpu=self.percpu,
+        )
+
+
     def push_to_mongodb(self):
         super(CpuMetrics, self).push_to_mongodb()
         #this triggers my OCD, but i can't find a better solution for inserting values in the db
@@ -100,10 +120,16 @@ class CpuMetrics(BaseClass):
             cpu_nice = self.time_series['nice'],
         )
         cpuloaddoc.save()
-    
+
 class VmMetrics(BaseClass):
-    
-    def __init__(self, template='vmem.svg', graph_tag='Virtual Memory', sample=5, interval=5):
+
+    def __init__(
+        self,
+        template='vmem.svg',
+        graph_tag='Virtual Memory',
+        sample=5,
+        interval=5
+    ):
         self.message = 'Fetching Virtual Memory Metrics'
         self.template = template
         self.graph_tag = graph_tag
@@ -113,7 +139,7 @@ class VmMetrics(BaseClass):
         self.document = VMemDoc
         super(VmMetrics, self).__init__()
 
-        
+
     def push_to_mongodb(self):
         super(VmMetrics, self).push_to_mongodb()
         vmdoc = self.document(
@@ -129,10 +155,16 @@ class VmMetrics(BaseClass):
         )
         vmdoc.save()
 
-        
+
 class SwapMetrics(BaseClass):
-    
-    def __init__(self, template='swap_mem.svg', graph_tag='Swap memory', sample=5, interval=5):
+
+    def __init__(
+        self,
+        template='swap_mem.svg',
+        graph_tag='Swap memory',
+        sample=5,
+        interval=5
+    ):
         self.message = 'Fetching Swap Memory Metrics'
         self.template = template
         self.graph_tag = graph_tag
@@ -142,7 +174,7 @@ class SwapMetrics(BaseClass):
         self.document = VSwapDoc
         super(SwapMetrics, self).__init__()
 
-        
+
     def push_to_mongodb(self):
         super(SwapMetrics, self).push_to_mongodb()
         vswapdoc = self.document(
@@ -157,8 +189,14 @@ class SwapMetrics(BaseClass):
 
 
 class NetIoMetrics(BaseClass):
-    
-    def __init__(self, template='netio.svg', graph_tag='Network IO', sample=5, interval=5):
+
+    def __init__(
+        self,
+        template='netio.svg',
+        graph_tag='Network IO',
+        sample=5,
+        interval=5
+    ):
         self.message = 'Fetching NIC Usage Metrics'
         self.template = template
         self.graph_tag = graph_tag
@@ -168,7 +206,7 @@ class NetIoMetrics(BaseClass):
         self.document = NetIoDoc
         super(NetIoMetrics, self).__init__()
 
-        
+
     def push_to_mongodb(self):
         super(NetIoMetrics, self).push_to_mongodb()
         netiodoc = self.document(
@@ -184,8 +222,14 @@ class NetIoMetrics(BaseClass):
         netiodoc.save()
 
 class DiskIoMetrics(BaseClass):
-    
-    def __init__(self, template='diskio.svg', graph_tag='Diso IO Metrics', sample=5, interval=5):
+
+    def __init__(
+        self,
+        template='diskio.svg',
+        graph_tag='Diso IO Metrics',
+        sample=5,
+        interval=5
+    ):
         self.message = 'Fetching Disk IO'
         self.template = template
         self.graph_tag = graph_tag
@@ -193,9 +237,9 @@ class DiskIoMetrics(BaseClass):
         self.interval = interval
         self.psfunct = psutil.disk_io_counters
         self.document = DiskIoDoc
-        super(DiskIoMetrics, self).__init__()
+        super(DiskIoMetrics, self).__init__(1440,500)
 
-        
+
     def push_to_mongodb(self):
         super(DiskIoMetrics, self).push_to_mongodb()
         diskiodoc = self.document(
