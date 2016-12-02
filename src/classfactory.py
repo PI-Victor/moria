@@ -12,13 +12,11 @@ graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 
 
 class BaseClass(object):
-
     def __init__(self, x, y):
         self.graph_fill = True
         self.graph_width = x
         self.graph_height = y
         self.legend = True
-
 
     def create_timeseries(self, **kwargs):
         self.time_series = {}
@@ -31,7 +29,6 @@ class BaseClass(object):
         self.push_to_mongodb()
         self.create_graph(self.time_series)
 
-
     def push_to_mongodb(self):
         # leave this simple for now, try to access the db for the object, otherwise, return
         try:
@@ -42,7 +39,6 @@ class BaseClass(object):
             log.Info('Connection to the db refused, running "on-the-fly mode", no history available')
             return
 
-
 #        commit_fields = ''
 #        for dbfield, mapped in self.document._meta_map.items():
 #            for datapoint in time_series:
@@ -51,7 +47,6 @@ class BaseClass(object):
 #                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
 
 #        self.document.save(pushdocument)
-
 
     def create_graph(self, kpi_list):
         labels = []
@@ -78,7 +73,6 @@ class BaseClass(object):
 
 
 class CpuMetrics(BaseClass):
-
     def __init__(
         self,
         template='cpu_load.svg',
@@ -95,13 +89,11 @@ class CpuMetrics(BaseClass):
         self.document = CpuLoadDoc
         super(CpuMetrics, self).__init__()
 
-
     def create_timeseries(self):
         super(CpuMetrics, self).create_timeseries(
             interval=self.interval,
             percpu=self.percpu,
         )
-
 
     def push_to_mongodb(self):
         super(CpuMetrics, self).push_to_mongodb()
@@ -121,8 +113,8 @@ class CpuMetrics(BaseClass):
         )
         cpuloaddoc.save()
 
-class VmMetrics(BaseClass):
 
+class VmMetrics(BaseClass):
     def __init__(
         self,
         template='vmem.svg',
@@ -138,7 +130,6 @@ class VmMetrics(BaseClass):
         self.psfunct = psutil.virtual_memory
         self.document = VMemDoc
         super(VmMetrics, self).__init__()
-
 
     def push_to_mongodb(self):
         super(VmMetrics, self).push_to_mongodb()
@@ -157,7 +148,6 @@ class VmMetrics(BaseClass):
 
 
 class SwapMetrics(BaseClass):
-
     def __init__(
         self,
         template='swap_mem.svg',
@@ -174,7 +164,6 @@ class SwapMetrics(BaseClass):
         self.document = VSwapDoc
         super(SwapMetrics, self).__init__()
 
-
     def push_to_mongodb(self):
         super(SwapMetrics, self).push_to_mongodb()
         vswapdoc = self.document(
@@ -189,7 +178,6 @@ class SwapMetrics(BaseClass):
 
 
 class NetIoMetrics(BaseClass):
-
     def __init__(
         self,
         template='netio.svg',
@@ -206,7 +194,6 @@ class NetIoMetrics(BaseClass):
         self.document = NetIoDoc
         super(NetIoMetrics, self).__init__()
 
-
     def push_to_mongodb(self):
         super(NetIoMetrics, self).push_to_mongodb()
         netiodoc = self.document(
@@ -221,8 +208,8 @@ class NetIoMetrics(BaseClass):
         )
         netiodoc.save()
 
-class DiskIoMetrics(BaseClass):
 
+class DiskIoMetrics(BaseClass):
     def __init__(
         self,
         template='diskio.svg',
@@ -238,7 +225,6 @@ class DiskIoMetrics(BaseClass):
         self.psfunct = psutil.disk_io_counters
         self.document = DiskIoDoc
         super(DiskIoMetrics, self).__init__(1440,500)
-
 
     def push_to_mongodb(self):
         super(DiskIoMetrics, self).push_to_mongodb()

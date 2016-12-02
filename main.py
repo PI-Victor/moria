@@ -28,6 +28,8 @@ logging.basicConfig(
     level=logging.DEBUG,
 )
 
+
+
 logger = logging.getLogger(__name__)
 
 def load_functions():
@@ -37,6 +39,12 @@ def load_functions():
     NetIoMetrics().create_timeseries()
     DiskIoMetrics().create_timeseries()
 
+def cleanup():
+    pass
+
+def reload_config():
+    pass
+
 def main():
 
     ctx = daemon.DaemonContext(
@@ -44,6 +52,13 @@ def main():
         files_preserve = [log_handler],
         umask = 0o002,
     )
+
+    ctx.signal_map = {
+        signal.SIGTERM: cleanup,
+        signal.SIGHUP: 'terminate',
+        signal.SIGUSR1: reload_config,
+    }
+
     with ctx:
         load_functions()
 
