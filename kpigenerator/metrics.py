@@ -10,11 +10,11 @@ from config import log, workdir, graphdir
 
 
 class BaseClass(object):
-    def __init__(self, x, y):
-        self.graph_fill = True
+    def __init__(self, x=768, y=478, legend, fill):
+        self.graph_fill = fill
         self.graph_width = x
         self.graph_height = y
-        self.legend = True
+        self.legend = legend
 
     def create_timeseries(self, **kwargs):
         self.time_series = {}
@@ -41,7 +41,7 @@ class BaseClass(object):
             for datapoint in time_series:
                 if datapoint == dbfield:
                     log.info(time_series[datapoint])
-                    commit_fields =  "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
+                    commit_fields = "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
 
         self.document.save(pushdocument)
 
@@ -74,7 +74,8 @@ class CpuMetrics(BaseClass):
         self,
         template='cpu_load.svg',
         graph_tag='Cpu Load Total',
-        sample=5, interval=1
+        sample=5,
+        interval=1,
     ):
         self.message = 'Cpu Processing started'
         self.template = template
@@ -115,7 +116,7 @@ class VmMetrics(BaseClass):
         template='vmem.svg',
         graph_tag='Virtual Memory',
         sample=5,
-        interval=5
+        interval=5,
     ):
         self.message = 'Fetching Virtual Memory Metrics'
         self.template = template
@@ -148,7 +149,7 @@ class SwapMetrics(BaseClass):
         template='swap_mem.svg',
         graph_tag='Swap memory',
         sample=5,
-        interval=5
+            interval=5,
     ):
         self.message = 'Fetching Swap Memory Metrics'
         self.template = template
@@ -178,7 +179,7 @@ class NetIoMetrics(BaseClass):
         template='netio.svg',
         graph_tag='Network IO',
         sample=5,
-        interval=5
+            interval=5,
     ):
         self.message = 'Fetching NIC Usage Metrics'
         self.template = template
