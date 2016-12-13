@@ -2,9 +2,9 @@ import daemon
 import signal
 import lockfile
 
-from src.config import log, workdir, logfh
-from src.metrics import CpuMetrics, VmMetrics
-from src.metrics import NetIoMetrics, DiskIoMetrics, SwapMetrics
+from kpigenerator.config import log, workdir, logfh
+from kpigenerator.metrics import CpuMetrics, VmMetrics
+from kpigenerator.metrics import NetIoMetrics, DiskIoMetrics, SwapMetrics
 
 def load_functions():
     CpuMetrics().create_timeseries()
