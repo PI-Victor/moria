@@ -11,3 +11,28 @@ class MetricsBucket(object):
 
     def __iter__(self):
         pass
+
+
+class Gauge(Metric):
+    def __init__(self):
+        pass
+
+
+class Counter(Metric):
+    def __init__(self):
+        pass
+
+
+class Timer(Metric):
+    def __init__(self):
+        pass
+
+
+class Sample(Metric):
+    def __init__(self):
+        pass
+
+
+class MultiMetric(Metric, MetricsBucket):
+    def __init__(self):
+        pass
