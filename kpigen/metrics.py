@@ -25,7 +25,8 @@ class BaseClass(object):
             [self.time_series.setdefault(metric,[]) for metric in kpi_tuple._fields]
             [values.append(getattr(kpi_tuple, metric)) for metric, values in self.time_series.items()]
             time.sleep(self.interval)
-        self.push_to_mongodb()
+        #self.push_to_mongodb()
+        log.debug("Pooling %s", self.message)
         self.create_graph(self.time_series)
 
     def push_to_mongodb(self):
@@ -34,7 +35,8 @@ class BaseClass(object):
             log.info("Connection accepted, pushing to mongo database: 'kpidb' ")
             log.info(self.message)
         except connection.ConnectionError as e:
-            log.info('Connection to the db refused, running "on-the-fly mode", no history available')
+            log.info('Connection to the db failed, running "on-the-fly mode", \
+            no history available %s', e)
             return
 
         commit_fields = ''
@@ -42,7 +44,11 @@ class BaseClass(object):
             for datapoint in time_series:
                 if datapoint == dbfield:
                     log.info(time_series[datapoint])
-                    commit_fields = "{}, {} = {}".format(commit_fields, mapped, time_series[datapoint])
+                    commit_fields = "{}, {} = {}".format(
+                        commit_fields,
+                        mapped,
+                        time_series[datapoint]
+                    )
 
         self.document.save(pushdocument)
 
@@ -51,7 +57,7 @@ class BaseClass(object):
         for label in kpi_list:
             labels.append(label)
             chart = pygal.Line(
-                fill=True,
+                fill=self.graph_fill,
                 width=self.graph_width,
                 height=self.graph_height,
                 title=self.graph_tag,

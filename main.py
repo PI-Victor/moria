@@ -9,11 +9,12 @@ from kpigen.metrics import NetIoMetrics, DiskIoMetrics, SwapMetrics
 
 def start_collection():
     log.info('Starting pooler...')
-    CpuMetrics().create_timeseries()
-    VmMetrics().create_timeseries()
-    SwapMetrics().create_timeseries()
-    NetIoMetrics().create_timeseries()
-    DiskIoMetrics().create_timeseries()
+    while True:
+        CpuMetrics().create_timeseries()
+        VmMetrics().create_timeseries()
+        SwapMetrics().create_timeseries()
+        NetIoMetrics().create_timeseries()
+        DiskIoMetrics().create_timeseries()
 
 def cleanup():
     pass
@@ -24,9 +25,7 @@ def reload_config():
 def main():
     ctx = daemon.DaemonContext(
         working_directory = work_dir,
-        files_preserve = [log_fh],
-        umask = 0o002,
-        pidfile=lockfile.FileLock(app_pid),
+        files_preserve = [log_fh.stream],
     )
     ctx.signal_map = {
         signal.SIGTERM: cleanup,
