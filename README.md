@@ -1,2 +1,4 @@
-# KPI Generator for fun
+Moria
+----
 
+A cluster monitoring service with a REST API.

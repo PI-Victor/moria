@@ -1,41 +1,24 @@
-import daemon
-import signal
-import lockfile
+import click
 
-from kpigen.config import log, work_dir, log_fh, app_pid
-from kpigen.metrics import CpuMetrics, VmMetrics
-from kpigen.metrics import NetIoMetrics, DiskIoMetrics, SwapMetrics
+from moria.config import log
 
 
-def start_collection():
-    log.info('Starting pooler...')
-    while True:
-        CpuMetrics().create_timeseries()
-        VmMetrics().create_timeseries()
-        SwapMetrics().create_timeseries()
-        NetIoMetrics().create_timeseries()
-        DiskIoMetrics().create_timeseries()
+@click.command()
+@click.option('--master', default=False, help='Start app as master node.')
+@click.option('--master-uri', default='', help='Master URI info')
+@click.option('--master-monitor', default=False, help='Start monitoring on the \
+master node as well. Disabled by default')
+@click.option('--bind-rest', default='127.0.0.1:8123', help='Bind REST service \
+to address')
+@click.option('--statsd', default='', help='StasD URI info')
+def start_services(master, master_uri, master_monitor, statsd):
+    if not master and master_uri=='':
+        log.error('Attempting to start as slave without master URI info')
+        return
 
-def cleanup():
-    pass
-
-def reload_config():
-    pass
-
-def main():
-    ctx = daemon.DaemonContext(
-        working_directory = work_dir,
-        files_preserve = [log_fh.stream],
-    )
-    ctx.signal_map = {
-        signal.SIGTERM: cleanup,
-        signal.SIGHUP: 'terminate',
-        signal.SIGUSR1: reload_config,
-    }
-
-    log.info('Starting daemon...')
-    with ctx:
-        start_collection()
+    if master:
+        log.Info('Starting node in slave mode')
+        return
 
 if __name__ == '__main__':
-    main()
+    start_services()

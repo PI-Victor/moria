@@ -11,11 +11,8 @@ from config import log, work_dir, graph_dir
 
 
 class BaseClass(object):
-    def __init__(self, x=768, y=478, legend=True, fill=True):
-        self.graph_fill = fill
-        self.graph_width = x
-        self.graph_height = y
-        self.legend = legend
+    def __init__(self):
+        pass
 
     def create_timeseries(self, **kwargs):
         self.time_series = {}
@@ -47,7 +44,7 @@ class BaseClass(object):
                     commit_fields = "{}, {} = {}".format(
                         commit_fields,
                         mapped,
-                        time_series[datapoint]
+                        time_series[datapoint],
                     )
 
         self.document.save(pushdocument)
@@ -186,7 +183,7 @@ class NetIoMetrics(BaseClass):
         template='netio.svg',
         graph_tag='Network IO',
         sample=5,
-            interval=5,
+        interval=5,
     ):
         self.message = 'Fetching NIC Usage Metrics'
         self.template = template

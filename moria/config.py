@@ -19,7 +19,6 @@ logging.basicConfig(
     filemode='a',
     level=logging.DEBUG,
 )
-graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 log = logging.getLogger(__name__)
 log_fh = logging.FileHandler(log_file)
 log.addHandler(log_fh)
