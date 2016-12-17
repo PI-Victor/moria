@@ -1,16 +1,17 @@
+# -*- coding: utf-8 -*-
 import time
 import os
 import psutil
 import pygal
 from pygal.style import NeonStyle
 from mongoengine import connection, connect
-from mongo_odm import CpuLoadDoc, VMemDoc, VSwapDoc, NetIoDoc, DiskIoDoc
+from db import CpuLoadDoc, VMemDoc, VSwapDoc, NetIoDoc, DiskIoDoc
 
-from config import log, workdir, graphdir
+from config import log, work_dir, graph_dir
 
 
 class BaseClass(object):
-    def __init__(self, x=768, y=478, legend, fill):
+    def __init__(self, x=768, y=478, legend=True, fill=True):
         self.graph_fill = fill
         self.graph_width = x
         self.graph_height = y
@@ -54,7 +55,7 @@ class BaseClass(object):
                 width=self.graph_width,
                 height=self.graph_height,
                 title=self.graph_tag,
-                legend_at_bottom=self.legend
+                legend_at_bottom=self.legend,
             )
             chart.x_labels = map(str, range(0, self.sample))
             for line, series in kpi_list.items():
@@ -149,7 +150,7 @@ class SwapMetrics(BaseClass):
         template='swap_mem.svg',
         graph_tag='Swap memory',
         sample=5,
-            interval=5,
+        interval=5,
     ):
         self.message = 'Fetching Swap Memory Metrics'
         self.template = template
@@ -211,7 +212,7 @@ class DiskIoMetrics(BaseClass):
         template='diskio.svg',
         graph_tag='Diso IO Metrics',
         sample=5,
-        interval=5
+        interval=5,
     ):
         self.message = 'Fetching Disk IO'
         self.template = template

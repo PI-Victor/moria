@@ -1,21 +1,23 @@
+# -*- coding: utf-8 -*-
 import os
 import logging
 
-workdir = os.path.join(
+work_dir = os.path.join(
     os.path.sep,
     os.path.dirname(os.path.realpath(__file__))
 )
-logfile = os.path.join(
+log_file = os.path.join(
             os.path.sep,
-            workdir,
+            work_dir,
             'debug.log'
 )
 logging.basicConfig(
-    filename=logfile,
+    filename=log_file,
     format='%(asctime)s %(levelname)s:%(message)s',
     filemode='a',
     level=logging.DEBUG,
 )
-graphdir = os.path.join(os.path.sep, work_dir, 'graphs')
+app_pid = '/var/run/kpigen.pid'
+graph_dir = os.path.join(os.path.sep, work_dir, 'graphs')
 log = logging.getLogger(__name__)
-logfh = logging.FileHandler(logfile)
+log_fh = logging.FileHandler(log_file)

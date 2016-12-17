@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import datetime
 import random
 import time
@@ -14,7 +15,7 @@ kpi_types = {
     1: 'int',
     2: 'string',
     3: 'boolean',
-    4: 'float'
+    4: 'float',
 }
 
 def gen_name():

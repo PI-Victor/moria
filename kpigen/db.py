@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from mongoengine import *
 import datetime
 
@@ -5,7 +6,7 @@ import datetime
 class CpuLoadDoc(Document):
     timestamp = DateTimeField(
         required=True,
-        default=datetime.datetime.utcnow()
+        default=datetime.datetime.utcnow(),
     )
     cpu_softirq = ListField()
     cpu_iowait = ListField()

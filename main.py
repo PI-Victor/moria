@@ -2,11 +2,13 @@ import daemon
 import signal
 import lockfile
 
-from kpigenerator.config import log, workdir, logfh
-from kpigenerator.metrics import CpuMetrics, VmMetrics
-from kpigenerator.metrics import NetIoMetrics, DiskIoMetrics, SwapMetrics
+from kpigen.config import log, work_dir, log_fh, app_pid
+from kpigen.metrics import CpuMetrics, VmMetrics
+from kpigen.metrics import NetIoMetrics, DiskIoMetrics, SwapMetrics
 
-def load_functions():
+
+def start_collection():
+    log.info('Starting pooler...')
     CpuMetrics().create_timeseries()
     VmMetrics().create_timeseries()
     SwapMetrics().create_timeseries()
@@ -21,10 +23,10 @@ def reload_config():
 
 def main():
     ctx = daemon.DaemonContext(
-        working_directory = workdir,
-        files_preserve = [logfh],
+        working_directory = work_dir,
+        files_preserve = [log_fh],
         umask = 0o002,
-        pidfile=lockfile.FileLock('/var/run/spam.pid'),
+        pidfile=lockfile.FileLock(app_pid),
     )
     ctx.signal_map = {
         signal.SIGTERM: cleanup,
@@ -32,9 +34,9 @@ def main():
         signal.SIGUSR1: reload_config,
     }
 
-    log.info('Loading metrics...')
+    log.info('Starting daemon...')
     with ctx:
-        load_functions()
+        start_collection()
 
 if __name__ == '__main__':
     main()
