@@ -1,7 +1,17 @@
 # -*- coding: utf-8 -*-
 from abc import ABCMeta
 
-class Service():
+
+class BackingService(object):
+    __metaclass__ = ABCMeta
+    self.uri = ''
+    self.driver = ''
+
+    def __init__(self):
+        pass
+
+
+class Service(object):
     __metaclass__ = ABCMeta
     self.uri = ''
     self.logger = ''
@@ -18,75 +28,5 @@ class Service():
         pass
 
     @abstractmethod
-    def start(self):
-        pass
-
-
-class Monitor(Service):
-    def __init__(self):
-        pass
-
-    def connect(self):
-        pass
-
-    def bind(self, address):
-        pass
-
-    def start(self):
-        pass
-
-
-class BackingService(Service):
-    def __init__(self):
-        pass
-
-    def connect(self):
-        pass
-
-    def bind(self, address):
-        pass
-
-    def start(self):
-        pass
-
-
-class RPCServer(Service):
-    def __init__(self):
-        pass
-
-    def connect(self):
-        pass
-
-    def bind(self, address):
-        pass
-
-    def start(self):
-        pass
-
-
-class RPCClient(Service):
-    def __init__(self):
-        pass
-
-    def connect(self):
-        pass
-
-    def bind(self, address):
-        pass
-
-    def start(self):
-        pass
-
-
-class RESTServer(Service):
-    def __init__(self):
-        pass
-
-    def connect(self):
-        pass
-
-    def bind(self, address):
-        pass
-
     def start(self):
         pass
