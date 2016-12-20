@@ -9,8 +9,5 @@ class RPCClient(Service):
     def connect(self):
         pass
 
-    def bind(self, address):
-        pass
-
     def start(self):
         pass
