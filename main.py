@@ -17,7 +17,7 @@ def start_services(master, master_uri, master_monitor, statsd):
         return
 
     if master:
-        log.Info('Starting node in slave mode')
+        log.Info('Starting node in master mode')
         return
 
 if __name__ == '__main__':
