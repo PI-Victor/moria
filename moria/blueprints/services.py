@@ -1,27 +1,17 @@
 # -*- coding: utf-8 -*-
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 
 class BackingServiceBlueprint(object):
-    """Defines mandatory functionality for a backing service.
-    """
+    '''Defines mandatory functionality for a backing service.
+    '''
     __metaclass__ = ABCMeta
-    self.uri = ''
-    self.driver = ''
-
-    def __init__(self):
-        pass
 
 
 class ServicesBlueprint(object):
-    """Defines mandatory functionality that a service should contain.
-    """
+    '''Defines mandatory functionality that a service should contain.
+    '''
     __metaclass__ = ABCMeta
-    self.uri = ''
-    self.logger = ''
-
-    def __init__(self):
-        pass
 
     @abstractmethod
     def connect(self):
@@ -30,3 +20,14 @@ class ServicesBlueprint(object):
     @abstractmethod
     def start(self):
         pass
+
+
+class Service(ServicesBlueprint):
+    '''Service defines the way that a service within the application should
+    behave.
+    '''
+
+class BackingService(BackingServiceBlueprint):
+    '''BackingService defines a way that a backing service within the
+    application should behave.
+    '''

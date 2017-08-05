@@ -3,9 +3,9 @@ from moria.services import Service, BackingService
 
 
 class Monitor(Service):
-    """Monitor is the service that manages pooling of metrics based on the
+    '''Monitor is the service that manages pooling of metrics based on the
     plugin system.
-    """
+    '''
 
     def __init__(self, interval):
         self.interval = interval
@@ -25,15 +25,15 @@ class Monitor(Service):
 
 
 class PoolScheduler(object):
-    """PoolScheduler handles the scheduling of pooling metrics.
-    """
+    '''PoolScheduler handles the scheduling of pooling metrics.
+    '''
     def __init__(self):
         self._pool_objects = []
 
 
 class MetricsBucket(object):
-    """MetricsBucket is the JSON representation of a metrics snapshot at a
+    '''MetricsBucket is the JSON representation of a metrics snapshot at a
     point in time.
-    """
+    '''
     def __init__(self):
         pass

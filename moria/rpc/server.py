@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from moria.services import Service, BackingService
+from moria.blueprints.services import Service, BackingService
 
 
 class RPCServer(Service):

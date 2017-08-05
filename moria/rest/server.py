@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask import Flask
-from flas_restful import Api, Resource
+from flask_restful import Api, Resource
 
-from moria.services import Service, BackingService
+from moria.blueprints.services import Service, BackingService
 from moria.config import log
 
 
@@ -11,7 +11,7 @@ class RESTServer(Service):
         self.logger = log.getLogger(__name__)
         self._api_resources = resource_map
 
-        self._app = Flask("moria")
+        self._app = Flask('moria')
         self._api = Api(app)
 
         load_resources(api)
@@ -23,7 +23,6 @@ class RESTServer(Service):
     def start(self, bind_address):
         app.run(self._app)
 
-    @staticmethod
-    def load_resources(api):
+    def load_resources(self, api):
         for resource, path in self._api_resources:
             api.add_resource(resource, path)

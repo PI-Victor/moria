@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import statsd
 
-from moria.services import Service, BackingService
-from config import log
+from moria.blueprints.services import Service, BackingService
+from moria.config import log
 
 class StatsdClient(Service):
     def __init__(self, statsd):

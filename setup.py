@@ -7,7 +7,9 @@ packages=[
     'moria',
 ]
 install_requires=[
-    'flask-rest',
+    'flask',
+    'flask-restful',
+    'statsd',
     'click',
     'psutil',
 ]
